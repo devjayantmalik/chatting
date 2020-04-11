@@ -54,7 +54,7 @@ The routes in the api are:
 
 ## Friends Module
 
-![friends api flow][readme_files/friends_flow.svg]
+![friends api flow](readme_files/friends_flow.svg)
 
 The Module will be responsible to serve data related:
 
@@ -72,6 +72,11 @@ The routes of the api are:
 | /friends/confirm/<friend_id>  | POST 		| Accepts friend request of the user. |
 | /friends/reject/<friend_id>   | POST 		| Rejects friend request of the user. |
 | /friends/search/<email_id>	| POST		| Searches friend by his email id. |
+
+
+> All the above post requests of the friends module requires you to pass **AUTH_TOKEN** in the headers. **AUTH_TOKEN** is referred to as secret key in the documentation.
+
+## 
 
 
 ## Issues
