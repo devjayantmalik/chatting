@@ -160,6 +160,8 @@ def register_user():
         # Create new user status offline
         update_user_online_status(user.id, False)
 
+        # Send account confirmation email
+
         return jsonify({
             "success": True,
             "secret_key": user.secret_key
@@ -303,3 +305,4 @@ def update_user_online_status(user_id, is_online):
     # Update user status
     status.is_online = is_online
     db.session.commit()
+

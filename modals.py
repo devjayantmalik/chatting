@@ -66,7 +66,24 @@ class Status(db.Model):
 #		Friends Modals
 # =============================
 
+class Friend(db.Model):
+	__tablename__ = "friends"
 
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	friend_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	request_accepted = db.Column(db.Boolean, default=False)
+	is_blocked = db.Column(db.Boolean, default=False)
+
+	def __init__(self, user_id, friend_id):
+		self.user_id = user_id
+		self.friend_of = friend_id
+
+	def accept_request(self):
+		self.request_accepted = True
+
+	def block_request(self):
+		self.is_blocked = True
 
 """
 class Channel(db.Model):

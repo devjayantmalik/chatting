@@ -26,6 +26,8 @@ The above diagram describes chat application. The diagram should understood as f
 
 ## Auth Module
 
+![auth api flow](readme_files/auth_flow.svg)
+
 There are two types of authentication system supported by the application:
 
 - Authentication via (Email and Password)
@@ -37,10 +39,7 @@ The idea behind this module is that:
 - The login screen, checks if user is logged in.
 	- If user is logged in, (check credentials via ajax request)
 	- Else prompt user for login
-- (checking credentials) login provides credentials via ajax request.
-	- If incorrect credentials, then  ask user to login again.
-	- Else redirect to index page.
-- User is now at index page.
+
 
 The routes in the api are:
 
@@ -53,4 +52,29 @@ The routes in the api are:
 
 > Secret key will be provided in headers as **AUTH_TOKEN** parameter.
 
-![auth api flow](readme_files/auth_flow.svg)
+## Friends Module
+
+![friends api flow][readme_files/friends_flow.svg]
+
+The Module will be responsible to serve data related:
+
+- All User friends
+- Friend Requests send and received by the user.
+- Accept or reject friend request.
+
+
+The routes of the api are:
+
+|	Route 						| Method  	|	Description 			 |
+| ----------------------------  | ------- 	| -------------------------- |
+| /friends/all/ 				| POST		| Returns all friends of the user. User has to provide secret key in headers of the request. |
+| /friends/requests 			| POST 		| View all friend requests sent to the user.  |
+| /friends/confirm/<friend_id>  | POST 		| Accepts friend request of the user. |
+| /friends/reject/<friend_id>   | POST 		| Rejects friend request of the user. |
+| /friends/search/<email_id>	| POST		| Searches friend by his email id. |
+
+
+## Issues
+- **ISSUE**: Automatically change status to offline, after every 30 seconds. 
+- **FIX**: Client will change its status to online after every 30 seconds.
+
