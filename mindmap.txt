@@ -1,0 +1,51 @@
+when the application starts:
+- ask user to login (and check if user is logged in.)
+- on login: save the user information in localstorage.
+
+when the index page appears:
+
+- load the user information from localstorage
+- get all contacts from server or load from localstorage.
+- get all subscribed channels from server or localstorage.
+- get recent chat history of subscribed channels from server or localstorage.
+- get all notifications from server.
+
+
+Routes
+
+				======== Related to user ==========
+| /auth/login/<secret_key>/ 	| Login user by a secret key |
+| /auth/login :POST:			| Login user by credentials |
+| /auth/check/<user_id> 		| Check if the user is online or offline |
+
+
+				========= Related to friends ==========
+| /friends/all/<secret_key>:	 | get all friends providing secret key |
+| /friends/requests/<secret_key> | Get all friend requests providing secret key |
+| /friends/confirm/ :POST:		 | Marks friend request as accepted or rejected. |
+| /friends/search/<email>		 | searches a friend by his email |
+
+				======== Related to channels ==========
+| /channels/subscribed/<secret_key>		| Get list of subscribed channels |
+| /channels/search/<name>				| Search a channel by its name |
+| /channels/search/<category>/<name>	| Search a channel by name in specified category |
+| /channels/chats/public/<channel_id> 	| Get last 100 chats of a public channel provided its id.
+| /channels/chats/private/<channel_id/<secret_key> | Get last 100 chats of the private channel by secret key
+
+| /channels/chats/all/<channel_id>/<secret_key> | Get links of 1000 chats each for all chats in the channel.
+
+				======== Related to notifications =========
+| /notifications/mark/<id>/<secret_key>	| Marks a notification as read provided secret key |
+| /notifications/recent/				| Returns all unread notifications |
+| /notifications/delete/				| Deletes a notifications |
+
+				======= Related to user preferences ============
+| /users/preferences/<secret_key>		| Returns all the preferences of the user.
+| /users/preferences/update/<secret_key | Updates user preferences |
+| /users/delete/ :POST:					| Deletes user account providing its credentials
+| /users/stats/							| Saves user statistics |
+
+				======== Related to socket io ==========
+| /announce/public/channels				| Announce newly created channels |
+| /announce/public/chats				| Announce chats on public channels |
+| /announce/private/chats/<channel_id> 	| Announce chats of private channels |
