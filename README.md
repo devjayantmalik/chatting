@@ -76,7 +76,8 @@ The routes of the api are:
 
 > All the above post requests of the friends module requires you to pass **AUTH_TOKEN** in the headers. **AUTH_TOKEN** is referred to as secret key in the documentation.
 
-## 
+## Channels Module
+
 
 
 ## Issues

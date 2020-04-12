@@ -1,0 +1,70 @@
+{% raw -%}
+
+<!-- ================================================== -->
+<!-- Contact List Item Template -->
+<!-- ================================================== -->
+<script id="contact-template" type="text/x-handlebars-template">
+	<a href="#" class="filterMembers all online contact" data-toggle="list">
+		<img
+			class="avatar-md"
+			src="{{avatar}}"
+			data-toggle="tooltip"
+			data-placement="top"
+			title="{{fname}} {{lname}}"
+			alt="avatar"
+		/>
+		<div class="status">
+			<i class="material-icons online">
+				fiber_manual_record
+			</i>
+		</div>
+		<div class="data">
+			<h5>
+				{{fname}} {{lname}}
+			</h5>
+			<p>
+				{{location}}
+			</p>
+		</div>
+		<div class="person-add">
+			<i class="material-icons">
+				person
+			</i>
+		</div>
+	</a>
+</script>
+
+<!-- ================================================== -->
+<!-- Channel List Item Template -->
+<!-- ================================================== -->
+<script id="channel-template" type="text/x-handlebars-template">
+	<a
+		href="#list-chat"
+		class="filterDiscussions all unread single active"
+		id="list-chat-list"
+		data-toggle="list"
+		role="tab"
+	>
+		<img
+			class="avatar-md"
+			src="/static/img/avatars/avatar-female-1.jpg"
+			data-toggle="tooltip"
+			data-placement="top"
+			title="Janette"
+			alt="avatar"
+		/>
+		<div class="status">
+			<i class="material-icons online">fiber_manual_record</i>
+		</div>
+		<div class="new bg-yellow">
+			<span>+7</span>
+		</div>
+		<div class="data">
+			<h5>Janette Dalton</h5>
+			<span>Mon</span>
+			<p>A new feature has been updated to your account. Check it out...</p>
+		</div>
+	</a>
+</script>
+
+{%- endraw %}

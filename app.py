@@ -1,6 +1,8 @@
 from flask import Flask
 from api.auth import auth
 from api.friends import friends
+from api.channels import channels
+from webpages import pages
 from modals import *
 
 # Create a flask app
@@ -35,7 +37,8 @@ db.init_app(app)
 # =========================
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(friends, url_prefix="/friends")
-
+app.register_blueprint(channels, url_prefix="/channels")
+app.register_blueprint(pages)
 
 if __name__ == "__main__":
 	with app.app_context():

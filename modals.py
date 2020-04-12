@@ -77,7 +77,7 @@ class Friend(db.Model):
 
 	def __init__(self, user_id, friend_id):
 		self.user_id = user_id
-		self.friend_of = friend_id
+		self.friend_id = friend_id
 
 	def accept_request(self):
 		self.request_accepted = True
@@ -85,21 +85,64 @@ class Friend(db.Model):
 	def block_request(self):
 		self.is_blocked = True
 
-"""
+
 class Channel(db.Model):
 	__tablename__ = "channels"
 
 	id = db.Column(db.Integer, primary_key=True)
 	name = db.Column(db.String(20), nullable=False, unique=True)
-	is_public = db.Column(db.Boolean, nullable=False, default=True)
-	avatar = db.Column(db.String(50), nullable=False, default="default.jpg")
+	avatar = db.Column(db.String(50), nullable=False, default=random.choice(CHANNEL_AVATARS))
 	created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+	created_on = db.Column(db.DateTime, nullable=False, server_default=db.text('now()'))
 
-	def __init__(self, name, avatar, created_by):
+	def __init__(self, name, created_by):
 		self.name = name
-		self.avatar = avatar
 		self.created_by = created_by
 
+class Subscription(db.Model):
+	"""Manages users subscribed to various channels."""
+	__tablename__ = "subscriptions"
+
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+	channel_id = db.Column(db.Integer, db.ForeignKey('channels.id'))
+
+	def __init__(self, user_id, channel_id):
+		self.user_id = user_id
+		self.channel_id = channel_id
+
+
+class FriendsChat(db.Model):
+	__tablename__ = "friendschats"
+
+	id = db.Column(db.Integer, primary_key=True)
+	sent_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+	sent_to = db.Column(db.Integer, db.ForeignKey('users.id'))
+	message = db.Column(db.Text, nullable=False)
+	sent_at = db.Column(db.DateTime, nullable=False, server_default=db.text('now()'))
+
+	def __init__(self, sent_by, sent_to, message):
+		self.sent_by = sent_by
+		self.sent_to = sent_to
+		self.message = message
+
+
+class ChannelChat(db.Model):
+	__tablename__ = "channelchats"
+
+	id = db.Column(db.Integer, primary_key=True)
+	sent_by = db.Column(db.Integer, db.ForeignKey('users.id'))
+	sent_on = db.Column(db.Integer, db.ForeignKey('channels.id'))
+	message = db.Column(db.Text, nullable=False)
+	sent_at = db.Column(db.DateTime, nullable=False, server_default=db.text('now()'))
+
+	def __init__(self, sent_by, sent_on, message):
+		self.sent_by = sent_by
+		self.sent_to = sent_on
+		self.message = message
+
+
+"""
 
 class Notification(db.Model):
 	__tablename__ = "notifications"

@@ -75,7 +75,6 @@ def check_online_status(user_id):
             "status": "offline"
             })
 
-    print(status)
     # Get the online status
     status = "online" if status.is_online else "offline"
     
@@ -161,7 +160,6 @@ def register_user():
         update_user_online_status(user.id, False)
 
         # Send account confirmation email
-
         return jsonify({
             "success": True,
             "secret_key": user.secret_key
