@@ -14,7 +14,7 @@ channels = Blueprint('channels', __name__, template_folder="templates")
 # ========================
 #   Application Functions
 # ========================
-@channels.route("/subscribed")
+@channels.route("/subscribed", methods=['POST'])
 def subscribed_channels():
 	"""Returns list of subscribed channels by the user."""
 
@@ -37,12 +37,41 @@ def subscribed_channels():
 		# Get channel by its id
 		ch = Channel.query.get(channel.channel_id)
 
+		# Get the user who created channel
+		user = User.query.get(ch.created_by)
+
 		# Append to list of subscribed channels
-		channels.append(ch)
+		channels.append({
+			"id": ch.id,
+			"name": ch.name,
+			"avatar": ch.avatar,
+			"created_by": user.fname + " " + user.lname,
+			"created_on": ch.created_on,
+			"description": ch.description
+			})
 
 	return jsonify({
 		"success": True,
 		"channels": channels
+		})
+
+
+@channels.route('/categories', methods=['GET'])
+def get_categories():
+	"""Returns list of all categories"""
+	categories = ChannelCategory.query.filter_by().all()
+
+	# Prepare result
+	result = []
+	for category in categories:
+		result.append({
+			"id": category.id,
+			"title": category.title
+			})
+
+	return jsonify({
+		"success": True,
+		"categories": result
 		})
 
 
@@ -100,6 +129,7 @@ def get_public_channel_chats(channel_id):
 	for chat in chats:
 		user_info = User.query.get(chat.sent_by).first()
 		channel_info = Channel.query.get(chat.sent_on).first()
+		category = ChannelCategory.query.get(channel.category_id)
 		message = chat.message
 		sent_at = chat.sent_at
 
@@ -111,7 +141,9 @@ def get_public_channel_chats(channel_id):
 		}
 		channel = {
 			"name": channel.name,
-			"avatar": channel.avatar
+			"avatar": channel.avatar,
+			"description": channel.description,
+			"category": category.id
 		}
 
 		response.append({
@@ -149,12 +181,34 @@ def create_channel():
 
 		# Get information related to channel
 		channel_name = request.body.get('name')
-		avatar = request.body.get('avatar')
+		category = request.body.get('category')
+		description = request.body.get('description')
 
+		# Validate the channel name
+		if not channel_name:
+			return jsonify({
+				"success": False,
+				"error": "Please provide channel name."
+				})
+
+		# Validate channel description
+		if len(description) > 100:
+			return jsonify({
+				"success": False,
+				"error": "Description cannot be more than 100 characters."
+				})
+
+		# Validate Category
+		category = ChannelCategory.query.get(category);
+		if not category:
+			return jsonify({
+				"success": False,
+				"error": "Invalid channel category provided."
+				})
 
 		# Create new channel
 		try:
-			channel = Channel(name=channel_name, created_by=user['id'])
+			channel = Channel(name=channel_name, created_by=user['id'], description=description, category_id=category.id)
 			db.session.add(channel)
 			db.session.commit()
 
@@ -162,7 +216,9 @@ def create_channel():
 				"id": channel.id,
 				"name": channel.name,
 				"avatar": channel.avatar,
-				"created_on": channel.created_on
+				"created_on": channel.created_on,
+				"description": channel.description,
+				"category": category.title
 			}
 
 			return jsonify({

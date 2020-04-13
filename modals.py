@@ -86,6 +86,16 @@ class Friend(db.Model):
 		self.is_blocked = True
 
 
+class ChannelCategory(db.Model):
+	__tablename__ = "categories";
+
+	id = db.Column(db.Integer, primary_key=True)
+	title = db.Column(db.String(30), nullable=False)
+
+	def __init__(self, title):
+		self.title = title
+
+
 class Channel(db.Model):
 	__tablename__ = "channels"
 
@@ -94,10 +104,15 @@ class Channel(db.Model):
 	avatar = db.Column(db.String(50), nullable=False, default=random.choice(CHANNEL_AVATARS))
 	created_by = db.Column(db.Integer, db.ForeignKey('users.id'))
 	created_on = db.Column(db.DateTime, nullable=False, server_default=db.text('now()'))
+	description = db.Column(db.String(100), nullable=False)
+	category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
 
-	def __init__(self, name, created_by):
+	def __init__(self, name, created_by, description, category_id):
 		self.name = name
 		self.created_by = created_by
+		self.description = description
+		self.category_id = category_id
+
 
 class Subscription(db.Model):
 	"""Manages users subscribed to various channels."""

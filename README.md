@@ -84,3 +84,7 @@ The routes of the api are:
 - **ISSUE**: Automatically change status to offline, after every 30 seconds. 
 - **FIX**: Client will change its status to online after every 30 seconds.
 
+<hr />
+
+- **ISSUE**: Index page opens even when user is logged out.
+- **FIX**: Add javascript to redirect to login page if user is not logged in.

@@ -4,6 +4,7 @@ window.addEventListener('DOMContentLoaded', page_loaded);
 function page_loaded(){
 	// check is user is already logged in.
 	check_login_status();
+
 	// add the form submit event.
 	document.querySelector('#login-form').onsubmit = login_form_submitted;
 	
@@ -80,6 +81,7 @@ function login_form_submitted(event){
 
 		// store the user in localhost
 		localStorage.setItem('secret_key', result.secret_key);
+		localStorage.setItem('user_id', result.id);
 
 		// redirect to index page.
 		document.location.href = "/";

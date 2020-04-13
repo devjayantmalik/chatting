@@ -38,24 +38,28 @@ def get_all_friends():
     friends = []
     for friend in friend_ids_1:
         user = User.query.get(friend.friend_id)
+        status = Status.query.filter_by(user_id=user.id).first()
         friends.append({
             "id": user.id,
             "avatar": "/static/img/avatars/users/"+user.avatar,
             "fname": user.fname,
             "lname": user.lname,
             "email": user.email,
-            "country": user.country
+            "country": user.country.upper(),
+            "is_online": status.is_online
             })
 
     for friend in friend_ids_2:
         user = User.query.get(friend.friend_id)
+        status = Status.query.filter_by(user_id=user.id).first()
         friends.append({
             "id": user.id,
             "avatar": "/static/img/avatars/users/"+user.avatar,
             "fname": user.fname,
             "lname": user.lname,
             "email": user.email,
-            "country": user.country
+            "country": user.country.upper(),
+            "is_online": status.is_online
             })
 
     # Return user friends
@@ -93,7 +97,7 @@ def friend_requests():
             "fname": user.fname,
             "lname": user.lname,
             "email": user.email,
-            "country": user.country
+            "country": user.country.upper()
             })
 
     return jsonify({
@@ -224,7 +228,6 @@ def search_friend(email):
             "error": "Email not provided."
             })
 
-    print(email)
     # Check if email is of correct format.
     if not validate_email(email):
         return jsonify({
@@ -330,6 +333,57 @@ def send_request(friend_id):
         "message": "Request sent successfully."
         })
 
+@friends.route('/chats/<int:friend_id>', methods=['POST'])
+def get_friends_chat(friend_id):
+
+    # Validate if friend id is provided
+    if not friend_id:
+        return jsonify({
+            "success": False,
+            "error": "Please provide friend id."
+            })
+
+    secret_key = request.headers.get('AUTH_TOKEN')
+
+    result = validate_token(secret_key)
+
+    if result['success'] == False:
+        return jsonify(result)
+
+    user_id = result['user']['id']
+
+    # Check if friend exists
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        return jsonify({
+            "success": False,
+            "error": "Your friend does not exists."
+            })
+
+    if friend.is_blocked:
+        return jsonify({
+            "success": False,
+            "error": "Your friend is blocked. He or she cannot receive messages."
+            })
+
+    # Get all chats sent by user to friend.
+    sent_chats = FriendsChat.query.filter_by(sent_by=user_id, sent_to=friend_id)
+
+    # Get all chats sent by friend to user
+    received_chats = FriendsChat.query.filter_by(sent_by=friend_id, sent_to=user_id)
+
+    sent = get_user_chats(sent_chats)
+    received = get_user_chats(received_chats)
+
+    total_chats = sent + received
+
+    return jsonify({
+        "success": True,
+        "chats": total_chats
+        })
+    
+
 
 # ============================
 #       Helper Functions
@@ -377,3 +431,28 @@ def validate_email(email):
 
     return re.search(regex, email)
 
+def get_user_chats(sent_chats):
+    # Limit the records
+    max_sent = 1000
+    messages = []
+
+    for chat in sent_chats:
+        user = User.query.get(chat.sent_by)
+        friend = User.query.get(chat.sent_to)
+
+        messages.append({
+            "id": chat.id,
+            "sender_id": user.id,
+            "sender_avatar": "/static/img/avatars/users/" + user.avatar,
+            "sender_fname": user.fname,
+            "sender_lname": user.lname,
+            "receiver_id": friend.id,
+            "receiver_fname": friend.fname,
+            "receiver_lname": friend.lname,
+            "receiver_avatar": friend.avatar,
+            "message": chat.message,
+            "sent_at": chat.sent_at
+            })
+
+    print(messages)
+    return messages
