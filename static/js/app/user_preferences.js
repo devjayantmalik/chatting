@@ -10,4 +10,9 @@ window.addEventListener('DOMContentLoaded', () => {
 	document.querySelector("#user-settings-email").value = localStorage.getItem('user_email');
 	document.querySelector("#user-settings-country").value = localStorage.getItem('user_country');
 
+	
+	// settings pane top avatar and name
+	document.querySelector("#settings-sidebar-avatar").src = localStorage.getItem('user_avatar');
+	document.querySelector("#settings-sidebar-name").innerHTML = localStorage.getItem('user_fname') + " " + localStorage.getItem('user_lname');
+	document.querySelector("#settings-sidebar-country").innerHTML = localStorage.getItem("user_country");
 });

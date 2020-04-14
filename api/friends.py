@@ -94,6 +94,7 @@ def friend_requests():
         user = User.query.get(friend.friend_id)
         pending_requests.append({
             "id": user.id,
+            "avatar": "/static/img/avatars/users/" +user.avatar,
             "fname": user.fname,
             "lname": user.lname,
             "email": user.email,

@@ -3,13 +3,6 @@
 //	   Global Variables
 // =======================
 
-// STORE ALL SUBSCRIBED CHANNELS
-let SUBSCRIBED_CHANNELS = []
-
-// STORE LAST CHANNEL VISITED
-let LAST_VISITED_CHANNEL_ID = localStorage.getItem('last_channel_visited');
-
-
 window.addEventListener('DOMContentLoaded', channels_page_loaded);
 
 function channels_page_loaded(){

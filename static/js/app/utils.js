@@ -1,7 +1,7 @@
 
 window.addEventListener('DOMContentLoaded', () => {
 	const secret_key = localStorage.getItem('secret_key');
-	if(!secret_key){
+	if(!secret_key && document.location.pathname == "/" ){
 		document.location.href = "/login";
 		return;
 	}
@@ -12,7 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 })
 
-/*
 function show_error(message){
 	// set the toast error message
 	document.querySelector("#error").innerHTML = message;
@@ -20,14 +19,13 @@ function show_error(message){
 	// display the toast
 	$('#error-toast').toast('show');
 }
-*/
-
-function show_error(message){
-	console.log(message);
-}
 
 function show_info(message){
-	console.log(message);
+	// set the toast error message
+	document.querySelector("#info").innerHTML = message;
+
+	// display the toast
+	$('#info-toast').toast('show');
 }
 
 
