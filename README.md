@@ -88,3 +88,6 @@ The routes of the api are:
 
 - **ISSUE**: Index page opens even when user is logged out.
 - **FIX**: Add javascript to redirect to login page if user is not logged in.
+
+- **ISSUE**: Fix Error and info display messages.
+- **FIX**: Create html modals to display.

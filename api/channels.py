@@ -44,7 +44,7 @@ def subscribed_channels():
 		channels.append({
 			"id": ch.id,
 			"name": ch.name,
-			"avatar": ch.avatar,
+			"avatar": "/static/img/avatars/channels/" +ch.avatar,
 			"created_by": user.fname + " " + user.lname,
 			"created_on": ch.created_on,
 			"description": ch.description
@@ -116,39 +116,23 @@ def get_public_channel_chats(channel_id):
 	user = result['user']
 
 	# Get the chats
-	chats = ChannelChat.query.filter_by(channel_id=channel_id).all()
+	chats = ChannelChat.query.filter_by(sent_on=channel_id).all()
 
-	if not chats:
-		return jsonify({
-			"success": False,
-			"error": "Provided channel not found."
-			})
-
+	# Prepare list of chats.
 	max_chats = 1000
 	response = []
 	for chat in chats:
-		user_info = User.query.get(chat.sent_by).first()
-		channel_info = Channel.query.get(chat.sent_on).first()
-		category = ChannelCategory.query.get(channel.category_id)
+		user_info = User.query.get(chat.sent_by)
+		channel_info = Channel.query.get(chat.sent_on)
+		category = ChannelCategory.query.get(channel_info.category_id)
 		message = chat.message
 		sent_at = chat.sent_at
 
-		user = {
-			"fname": user_info.fname,
-			"lname": user_info.lname,
-			"email": user_info.email,
-			"country": user_info.country
-		}
-		channel = {
-			"name": channel.name,
-			"avatar": channel.avatar,
-			"description": channel.description,
-			"category": category.id
-		}
-
 		response.append({
-			"user": user,
-			"channel": channel,
+			"sender_id": user_info.id,
+			"sender_avatar": "/static/img/avatars/users/" +user_info.avatar,
+			"sender_fname": user_info.fname,
+			"sender_lname": user_info.lname,
 			"message": message,
 			"sent_at": sent_at
 			})
@@ -160,7 +144,10 @@ def get_public_channel_chats(channel_id):
 		if(max_chats <= 0):
 			break
 
-	return jsonify(response)
+	return jsonify({
+		"success": True,
+		"chats": response
+		})
 
 
 @channels.route('/create', methods=['POST'])
@@ -177,12 +164,12 @@ def create_channel():
 			return jsonify(result)
 
 		# Get the user.
-		user = result['user']
+		user_id = result['user']['id']
 
 		# Get information related to channel
-		channel_name = request.body.get('name')
-		category = request.body.get('category')
-		description = request.body.get('description')
+		channel_name = request.form.get('name')
+		category = request.form.get('category')
+		description = request.form.get('description')
 
 		# Validate the channel name
 		if not channel_name:
@@ -208,9 +195,14 @@ def create_channel():
 
 		# Create new channel
 		try:
-			channel = Channel(name=channel_name, created_by=user['id'], description=description, category_id=category.id)
+			channel = Channel(name=channel_name, created_by=user_id, description=description, category_id=category.id)
 			db.session.add(channel)
 			db.session.commit()
+
+			# Add user to subscribed channels list
+			subscription = Subscription(user_id=user_id, channel_id=channel.id)
+			db.session.add(subscription)
+			db.session.commit();
 
 			channel = {
 				"id": channel.id,
@@ -226,16 +218,18 @@ def create_channel():
 				"channel": channel
 				})
 
-		except Exception:
+		except Exception as ex:
+			print(ex)
 			return jsonify({
 				"success": False,
-				"error": "Channel creation error occured."
+				"error": "Channel creation error occured: "
 				})
 
-	except Exception:
+	except Exception as ex:
+		print(ex)
 		return jsonify({
 			"success": False,
-			"error": "Server Error occured."
+			"error": "Server error occured.: "
 			})
 
 # ========================

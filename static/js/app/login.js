@@ -35,6 +35,8 @@ function check_login_status() {
 				return;
 			}
 
+			console.log(result);
+
 			// redirect the user to index page.
 			document.location.href = "/";
 		};
@@ -80,8 +82,13 @@ function login_form_submitted(event){
 		}
 
 		// store the user in localhost
-		localStorage.setItem('secret_key', result.secret_key);
-		localStorage.setItem('user_id', result.id);
+		localStorage.setItem('secret_key', result.user.secret_key);
+		localStorage.setItem('user_id', result.user.id)
+		localStorage.setItem('user_avatar', result.user.avatar)
+		localStorage.setItem('user_fname', result.user.fname)
+		localStorage.setItem('user_lname', result.user.lname)
+		localStorage.setItem('user_email', result.user.email)
+		localStorage.setItem('user_country', result.user.country)
 
 		// redirect to index page.
 		document.location.href = "/";

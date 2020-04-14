@@ -238,7 +238,7 @@ def login_via_key(key):
 
     user_info = {
     "id": user.id,
-    "avatar": user.avatar,
+    "avatar": "/static/img/avtars/users/" +user.avatar,
     "fname": user.fname,
     "lname": user.lname,
     "email": user.email,
@@ -280,13 +280,23 @@ def login_via_credentials(email, password):
             "error": "Your account is blocked. In case of error from our side, please file a report at contact us page."
             })
 
+    user_info = {
+        "id": user.id,
+        "avatar": "/static/img/avatars/users/" +user.avatar,
+        "fname": user.fname,
+        "lname": user.lname,
+        "email": user.email,
+        "secret_key": user.secret_key,
+        "country": user.country,
+        }
+
     # Change user status to online
     update_user_online_status(user.id, True)
 
     # Check if user exists
     return jsonify({
         "success": True,
-        "secret_key": user.secret_key
+        "user": user_info
         })
 
 

@@ -1,5 +1,6 @@
 {% raw -%}
 
+
 <!-- ================================================== -->
 <!-- Contact List Item Template -->
 <!-- ================================================== -->
@@ -42,33 +43,6 @@
 			<i class="material-icons">
 				person
 			</i>
-		</div>
-	</a>
-</script>
-
-<!-- ================================================== -->
-<!-- Channel List Item Template -->
-<!-- ================================================== -->
-<script id="channel-template" type="text/x-handlebars-template">
-	<a
-		href="#list-chat"
-		class="filterDiscussions all subscribed single active"
-		id="list-chat-list"
-		data-toggle="list"
-		role="tab"
-	>
-		<img
-			class="avatar-md"
-			src="{{avatar}}"
-			data-toggle="tooltip"
-			data-placement="top"
-			title="{{name}}"
-			alt="avatar"
-		/>
-		<div class="data">
-			<h5>{{name}}</h5>
-			<span>{{created_on}}</span>
-			<p>{{last_message}}<p>
 		</div>
 	</a>
 </script>
@@ -254,5 +228,6 @@
 							</div>
 							<!-- End of Chat -->
 </script>
+
 
 {%- endraw %}

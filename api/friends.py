@@ -68,7 +68,7 @@ def get_all_friends():
         "friends": friends
         })
 
-@friends.route('/requests/', methods=['POST'])
+@friends.route('/requests', methods=['POST'])
 def friend_requests():
     """Returns all pending friend requests."""
 
@@ -454,5 +454,4 @@ def get_user_chats(sent_chats):
             "sent_at": chat.sent_at
             })
 
-    print(messages)
     return messages

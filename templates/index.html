@@ -8,7 +8,7 @@
 					<div class="container">
 						<div class="inside">
 							<div class="nav nav-tab menu">
-								<button class="btn"><img class="avatar-xl" src="/static/img/avatars/users/avatar-male-1.jpg" alt="avatar"></button>
+								<button class="btn"><img class="avatar-xl" id="page-top-avatar" src="" alt="avatar"></button>
 								<a href="#members" data-toggle="tab"><i class="material-icons">account_circle</i></a>
 								<a href="#subscribed-channels" data-toggle="tab" class="active"><i class="material-icons active">chat_bubble_outline</i></a>
 								<a href="#notifications" data-toggle="tab" class="f-grow1"><i class="material-icons">notifications_none</i></a>
@@ -222,7 +222,7 @@
 													<div class="content">
 														<div class="upload">
 															<div class="data">
-																<img class="avatar-xl" src="/static/img/avatars/avatar-male-1.jpg" alt="image">
+																<img class="avatar-xl" id="user-settings-avatar" src="" alt="image">
 																<label>
 																	<input type="file">
 																	<span class="btn button">Upload avatar</span>
@@ -230,65 +230,35 @@
 															</div>
 															<p>For best results, use an image at least 256px by 256px in either .jpg or .png format!</p>
 														</div>
-														<form>
+														<form id="user-settings-form">
 															<div class="parent">
 																<div class="field">
-																	<label for="firstName">First name <span>*</span></label>
-																	<input type="text" class="form-control" id="firstName" placeholder="First name" value="Michael" required>
+																	<label for="user-settings-fname">First name <span>*</span></label>
+																	<input type="text" class="form-control" id="user-settings-fname" placeholder="First name" value="" required>
 																</div>
 																<div class="field">
-																	<label for="lastName">Last name <span>*</span></label>
-																	<input type="text" class="form-control" id="lastName" placeholder="Last name" value="Knudsen" required>
+																	<label for="user-settings-lname">Last name <span>*</span></label>
+																	<input type="text" class="form-control" id="user-settings-lname" placeholder="Last name" value="" required>
 																</div>
 															</div>
 															<div class="field">
-																<label for="email">Email <span>*</span></label>
-																<input type="email" class="form-control" id="email" placeholder="Enter your email address" value="michael@gmail.com" required>
+																<label for="user-settings-email">Email <span>*</span></label>
+																<input type="email" class="form-control" id="user-settings-email" placeholder="Enter your email address" value="" disabled="disabled">
 															</div>
 															<div class="field">
-																<label for="password">Password</label>
-																<input type="password" class="form-control" id="password" placeholder="Enter a new password" value="password" required>
+																<label for="user-settings-password">Password</label>
+																<input type="password" class="form-control" id="user-settings-password" placeholder="Enter a new password" value="" required>
 															</div>
 															<div class="field">
-																<label for="location">Location</label>
-																<input type="text" class="form-control" id="location" placeholder="Enter your location" value="Helena, Montana" required>
+																<label for="user-settings-country">Location</label>
+																<input type="text" class="form-control" id="user-settings-country" placeholder="Enter your location" disabled="disabled" required>
 															</div>
-															<button class="btn btn-link w-100">Delete Account</button>
-															<button type="submit" class="btn button w-100">Apply</button>
+															<button type="submit" class="btn button w-100">Update Details.</button>
 														</form>
 													</div>
 												</div>
 											</div>
 											<!-- End of My Account -->
-											<!-- Start of Chat History -->
-											<div class="category">
-												<a href="#" class="title collapsed" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-													<i class="material-icons md-30 online">mail_outline</i>
-													<div class="data">
-														<h5>Chats</h5>
-														<p>Check your chat history</p>
-													</div>
-													<i class="material-icons">keyboard_arrow_right</i>
-												</a>
-												<div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordionSettings">
-													<div class="content layer">
-														<div class="history">
-															<p>When you clear your conversation history, the messages will be deleted from your own device.</p>
-															<p>The messages won't be deleted or cleared on the devices of the people you chatted with.</p>
-															<div class="custom-control custom-checkbox">
-																<input type="checkbox" class="custom-control-input" id="same-address">
-																<label class="custom-control-label" for="same-address">Hide will remove your chat history from the recent list.</label>
-															</div>
-															<div class="custom-control custom-checkbox">
-																<input type="checkbox" class="custom-control-input" id="save-info">
-																<label class="custom-control-label" for="save-info">Delete will remove your chat history from the device.</label>
-															</div>
-															<button type="submit" class="btn button w-100">Clear blah-blah</button>
-														</div>
-													</div>
-												</div>
-											</div>
-											<!-- End of Chat History -->
 											<!-- Start of Notifications Settings -->
 											<div class="category">
 												<a href="#" class="title collapsed" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
@@ -304,7 +274,7 @@
 														<div class="set">
 															<div class="details">
 																<h5>Desktop Notifications</h5>
-																<p>You can set up Swipe to receive notifications when you have new messages.</p>
+																<p>You can set up Flack to receive notifications when you have new messages.</p>
 															</div>
 															<label class="switch">
 																<input type="checkbox" checked>
@@ -365,66 +335,6 @@
 												</div>
 											</div>
 											<!-- End of Notifications Settings -->
-											<!-- Start of Connections -->
-											<div class="category">
-												<a href="#" class="title collapsed" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-													<i class="material-icons md-30 online">sync</i>
-													<div class="data">
-														<h5>Connections</h5>
-														<p>Sync your social accounts</p>
-													</div>
-													<i class="material-icons">keyboard_arrow_right</i>
-												</a>
-												<div class="collapse" id="collapseFour" aria-labelledby="headingFour" data-parent="#accordionSettings">
-													<div class="content">
-														<div class="app">
-															<img src="/static/img/integrations/slack.svg" alt="app">
-															<div class="permissions">
-																<h5>Skrill</h5>
-																<p>Read, Write, Comment</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox" checked>
-																<span class="slider round"></span>
-															</label>
-														</div>
-														<div class="app">
-															<img src="/static/img/integrations/dropbox.svg" alt="app">
-															<div class="permissions">
-																<h5>Dropbox</h5>
-																<p>Read, Write, Upload</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox" checked>
-																<span class="slider round"></span>
-															</label>
-														</div>
-														<div class="app">
-															<img src="/static/img/integrations/drive.svg" alt="app">
-															<div class="permissions">
-																<h5>Google Drive</h5>
-																<p>No permissions set</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox">
-																<span class="slider round"></span>
-															</label>
-														</div>
-														<div class="app">
-															<img src="/static/img/integrations/trello.svg" alt="app">
-															<div class="permissions">
-																<h5>Trello</h5>
-																<p>No permissions set</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox">
-																<span class="slider round"></span>
-															</label>
-														</div>
-													</div>
-												</div>
-											</div>
-											<!-- End of Connections -->
 											<!-- Start of Appearance Settings -->
 											<div class="category">
 												<a href="#" class="title collapsed" id="headingFive" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
@@ -465,7 +375,7 @@
 													<div class="content layer">
 														<div class="language">
 															<label for="country">Language</label>
-															<select class="custom-select" id="country" required>
+															<select disabled="disabled" class="custom-select" id="country" required>
 																<option value="">Select an language...</option>
 																<option>English, UK</option>
 																<option>English, US</option>
@@ -487,46 +397,6 @@
 												</a>
 												<div class="collapse" id="collapseSeven" aria-labelledby="headingSeven" data-parent="#accordionSettings">
 													<div class="content no-layer">
-														<div class="set">
-															<div class="details">
-																<h5>Keep Me Safe</h5>
-																<p>Automatically scan and delete direct messages you receive from everyone that contain explict content.</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox">
-																<span class="slider round"></span>
-															</label>
-														</div>
-														<div class="set">
-															<div class="details">
-																<h5>My Friends Are Nice</h5>
-																<p>If enabled scans direct messages from everyone unless they are listed as your friend.</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox" checked>
-																<span class="slider round"></span>
-															</label>
-														</div>
-														<div class="set">
-															<div class="details">
-																<h5>Everyone can add me</h5>
-																<p>If enabled anyone in or out your friends of friends list can send you a friend request.</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox" checked>
-																<span class="slider round"></span>
-															</label>
-														</div>
-														<div class="set">
-															<div class="details">
-																<h5>Friends of Friends</h5>
-																<p>Only your friends or your mutual friends will be able to send you a friend reuqest.</p>
-															</div>
-															<label class="switch">
-																<input type="checkbox" checked>
-																<span class="slider round"></span>
-															</label>
-														</div>
 														<div class="set">
 															<div class="details">
 																<h5>Data to Improve</h5>
@@ -618,9 +488,9 @@
 									</div>
 									<div class="form-group">
 										<label for="message">Channel Description:</label>
-										<textarea class="text-control" id="message" placeholder="Enter description about your channel in max of 100 words...." maxlength="100"></textarea>
+										<textarea class="text-control" id="inputChannelMessage" placeholder="Enter description about your channel in max of 100 words...." maxlength="100"></textarea>
 									</div>
-									<button type="submit" class="btn button w-100">Start New Chat</button>
+									<button type="submit" class="btn button w-100">Create new channel.</button>
 								</form>
 							</div>
 						</div>

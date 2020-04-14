@@ -1,4 +1,17 @@
 
+window.addEventListener('DOMContentLoaded', () => {
+	const secret_key = localStorage.getItem('secret_key');
+	if(!secret_key){
+		document.location.href = "/login";
+		return;
+	}
+
+	if(secret_key == "null" && document.location.pathname == "/" ){
+		document.location.href = "/login";
+		return;
+	}
+})
+
 /*
 function show_error(message){
 	// set the toast error message
@@ -19,6 +32,8 @@ function show_info(message){
 
 
 function logout(){
+	
+
 	// create request
 	const request = new XMLHttpRequest();
 	request.open('post', '/auth/logout')
@@ -32,6 +47,8 @@ function logout(){
 			return;
 		}
 
+		// clear the localstorage key
+		localStorage.setItem('secret_key', null);
 		document.location.href = "/login";
 
 	}
