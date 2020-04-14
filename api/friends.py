@@ -276,7 +276,7 @@ def search_friend(email):
         })
 
 
-@friends.route('/send/<string:friend_id>', methods=['POST'])
+@friends.route('/send/<int:friend_id>', methods=['POST'])
 def send_request(friend_id):
     """Sends friend request to the person."""
 
@@ -384,6 +384,67 @@ def get_friends_chat(friend_id):
         "chats": total_chats
         })
     
+
+
+@friends.route('/chats/send/<int:friend_id>', methods=['post'])
+def send_message(friend_id):
+    # Get the secret key
+    secret_key = request.headers.get('AUTH_TOKEN')
+
+    # Validate the secret key
+    result = validate_token(secret_key)
+
+    # If key is invalid return error.
+    if result['success'] == False:
+        return jsonify(result)
+
+    # Get the user.
+    user_id = result['user']["id"]
+    print(user_id)
+    print(friend_id)
+
+    # Check if friend with provided id exists
+    friend = User.query.get(friend_id)
+
+    if not friend:
+        return jsonify({
+            "success": False,
+            "error": "Friend with provided id does not exists."
+            });
+
+    # Get the message to send
+    message = request.form.get('message')
+
+
+    try:
+        ch = FriendsChat(sent_by=user_id, sent_to=friend.id, message=message)
+        db.session.add(ch)
+        db.session.commit()
+
+        user_info = User.query.get(user_id)
+        channel_info = Channel.query.get(channel_id)
+        message = message
+        sent_at = channel.sent_at
+
+        result = {
+            "sender_id": user_info.id,
+            "sender_avatar": "/static/img/avatars/users/" +user_info.avatar,
+            "sender_fname": user_info.fname,
+            "sender_lname": user_info.lname,
+            "message": message,
+            "sent_at": sent_at
+            }
+
+        return jsonify({
+            "success": True,
+            "result": result
+            })
+
+    except:
+        return jsonify({
+            "success": False,
+            "error": "Server error occured."
+            })
 
 
 # ============================

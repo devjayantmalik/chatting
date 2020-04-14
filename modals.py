@@ -153,7 +153,7 @@ class ChannelChat(db.Model):
 
 	def __init__(self, sent_by, sent_on, message):
 		self.sent_by = sent_by
-		self.sent_to = sent_on
+		self.sent_on = sent_on
 		self.message = message
 
 

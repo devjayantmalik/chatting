@@ -61,6 +61,7 @@ The Module will be responsible to serve data related:
 - All User friends
 - Friend Requests send and received by the user.
 - Accept or reject friend request.
+- Chat with existing friends.
 
 
 The routes of the api are:
@@ -72,22 +73,36 @@ The routes of the api are:
 | /friends/confirm/<friend_id>  | POST 		| Accepts friend request of the user. |
 | /friends/reject/<friend_id>   | POST 		| Rejects friend request of the user. |
 | /friends/search/<email_id>	| POST		| Searches friend by his email id. |
+| /friends/chats/<friend_id>	| POST		| Get all chats between user and friend. |
 
 
 > All the above post requests of the friends module requires you to pass **AUTH_TOKEN** in the headers. **AUTH_TOKEN** is referred to as secret key in the documentation.
 
 ## Channels Module
 
+![channels flow image](readme_files/channels_flow.svg)
+
+The module will be responsible for serving data realated to:
+
+- All channels subscribed by the user.
+- Searching public channels.
+- Create new channel.
+- Chat on available channels.
+- Return categories related to the channels.
+
+
+The routes of the api are:
+
+|	Route 						| Method  	|	Description 			 |
+| ----------------------------  | ------- 	| -------------------------- |
+| /channels/subscribed/ 		| POST		| Returns all subscribed channels of the user. User has to provide secret key in headers of the request. |
+| /channels/create 				| POST 		| Create new channel.  |
+| /channels/search/<name>  		| POST 		| Search channel by its name. |
+| /channels/chats/public/<channel_id>  | POST 		| Get chat messages for the channel |
+| /channels/chats/send/<channel_id> 			| POST 		| Sends message on a channel.
+
 
 
 ## Issues
 - **ISSUE**: Automatically change status to offline, after every 30 seconds. 
 - **FIX**: Client will change its status to online after every 30 seconds.
-
-<hr />
-
-- **ISSUE**: Index page opens even when user is logged out.
-- **FIX**: Add javascript to redirect to login page if user is not logged in.
-
-- **ISSUE**: Fix Error and info display messages.
-- **FIX**: Create html modals to display.

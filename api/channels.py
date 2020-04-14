@@ -232,6 +232,65 @@ def create_channel():
 			"error": "Server error occured.: "
 			})
 
+@channels.route('/chats/send/<int:channel_id>', methods=['post'])
+def send_message(channel_id):
+	# Get the secret key
+	secret_key = request.headers.get('AUTH_TOKEN')
+
+	# Validate the secret key
+	result = validate_token(secret_key)
+
+	# If key is invalid return error.
+	if result['success'] == False:
+		return jsonify(result)
+
+	# Get the user.
+	user_id = result['user']["id"]
+
+	# Check if channel with provided id exists
+	channel = Channel.query.get(channel_id)
+
+	if not channel:
+		return jsonify({
+			"success": False,
+			"error": "Channel with provided id does not exists."
+			});
+
+	# Get the message to send
+	message = request.form.get('message')
+
+
+	try:
+		ch = ChannelChat(sent_by=user_id, sent_on=channel_id, message=message)
+		db.session.add(ch)
+		db.session.commit()
+
+		user_info = User.query.get(user_id)
+		channel_info = Channel.query.get(channel_id)
+		message = message
+		sent_at = channel.sent_at
+
+		result = {
+			"sender_id": user_info.id,
+			"sender_avatar": "/static/img/avatars/users/" +user_info.avatar,
+			"sender_fname": user_info.fname,
+			"sender_lname": user_info.lname,
+			"message": message,
+			"sent_at": sent_at
+			}
+
+		return jsonify({
+			"success": True,
+			"result": result
+			})
+
+	except:
+		return jsonify({
+			"success": False,
+			"error": "Server error occured."
+			})
+
+
 # ========================
 #   Helper Functions
 # ========================

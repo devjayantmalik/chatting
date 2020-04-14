@@ -198,7 +198,9 @@ function render_contact_chats(contact, chats){
 	let content = chat_container({
 		"id": contact.id,
 		"header": header_content,
-		"messages": messages_content
+		"messages": messages_content,
+		"friend_id": contact.id
+
 	})
 
 	// update the html page
@@ -222,4 +224,49 @@ const toggleChat = (id) => {
 	if(!chat.classList.contains('active')){
 		chat.classList.add('active')
 	}
+}
+
+
+function send_contact_message(id){
+	let message = document.querySelector("#contact-form-message-"+id).value;
+	let friend_id = document.querySelector("#contact-form-friend-"+id).value;
+	
+	// validate length of message
+	if(message.length < 1){
+		show_error("Message length should be minimum 1 character.")
+		return;
+	}
+
+	const request = new XMLHttpRequest();
+	request.open('post', '/friends/chats/send/'+friend_id);
+	request.setRequestHeader('AUTH_TOKEN', localStorage.getItem('secret_key'));
+
+	let form_data = new FormData();
+	form_data.append('message', message);
+
+	request.onload = () => {
+		const res = JSON.parse(request.responseText);
+		if(res.status == false){
+			show_error(res.error);
+			return;
+		}
+
+		// append the messages to the chat
+		document.querySelector('#contact-messages-'+id).innerHTML += `
+				<div class="message me">
+					<div class="text-main">
+						<div class="text-group me">
+							<div class="text me">
+								<p>
+									${message}
+								</p>
+							</div>
+						</div>
+						<span>${new Date().toLocaleTimeString()}</span>
+					</div>
+				</div>`;
+	}
+
+
+	request.send(form_data)
 }

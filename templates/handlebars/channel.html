@@ -167,7 +167,7 @@
 									{{{header}}}
 									<div class="content">
 										<div class="container">
-											<div class="col-md-12">
+											<div class="col-md-12" id="channel-messages-{{id}}">
 												{{#each messages}}
 													{{{this}}}
 												{{/each}}
@@ -178,13 +178,13 @@
 								<div class="container">
 									<div class="col-md-12">
 										<div class="bottom">
-											<form class="position-relative w-100">
-												<textarea class="form-control" placeholder="Start typing for reply..." rows="1"></textarea>
+											<div class="position-relative w-100" send_channel_message({{id}}) ">
+												<textarea class="form-control" placeholder="Start typing for reply..." rows="1" id="channel-form-message{{id}}"></textarea>
 												<button type="button" class="btn emoticons"><i class="material-icons">insert_emoticon</i></button>
-												<button type="submit" class="btn send"><i class="material-icons">send</i></button>
-											</form>
+												<button type="button" onclick="send_channel_message({{id}})" class="btn send"><i class="material-icons">send</i></button>
+											</div>
 											<label>
-												<input type="file">
+												<input type="file" disabled>
 												<span class="btn attach d-sm-block d-none"><i class="material-icons">attach_file</i></span>
 											</label>
 										</div>

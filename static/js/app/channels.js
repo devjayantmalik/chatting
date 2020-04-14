@@ -261,3 +261,46 @@ const toggleChannelChat = (id) => {
 		chat.classList.add('active')
 	}
 }
+
+
+// ==================================
+// ==================================
+// ==================================
+// ==================================
+
+function send_channel_message(id){
+	let message = document.querySelector("#channel-form-message"+id).value;
+	
+	const request = new XMLHttpRequest();
+	request.open('post', '/channels/chats/send/'+id);
+	request.setRequestHeader('AUTH_TOKEN', localStorage.getItem('secret_key'));
+
+	let form_data = new FormData();
+	form_data.append('message', message);
+
+	request.onload = () => {
+		const res = JSON.parse(request.responseText);
+		if(res.status == false){
+			show_error(res.error);
+			return;
+		}
+
+		// append the messages to the chat
+		document.querySelector('#channel-messages-'+id).innerHTML += `
+				<div class="message me">
+					<div class="text-main">
+						<div class="text-group me">
+							<div class="text me">
+								<p>
+									${message}
+								</p>
+							</div>
+						</div>
+						<span>${new Date().toLocaleTimeString()}</span>
+					</div>
+				</div>`;
+	}
+
+
+	request.send(form_data)
+}
