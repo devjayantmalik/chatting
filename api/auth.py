@@ -2,6 +2,9 @@ from flask import Blueprint, request, jsonify
 import sys
 import re
 
+# Import file to send emails
+from . import mailer
+
 # Import the modals file in parent directory
 sys.path.insert(0, '..')
 from modals import *
@@ -160,6 +163,15 @@ def register_user():
         update_user_online_status(user.id, False)
 
         # Send account confirmation email
+        is_sent = mailer.send_mail(user.email, user.secret_key)
+
+        if not is_sent:
+            return jsonify({
+                "success": False,
+                "error": "Confirmation email sending failed with error. Please report us by sending us email at: prod.jayantmalik@gmail.com. It was error from our side. We will fix it soon."
+                })
+
+
         return jsonify({
             "success": True,
             "secret_key": user.secret_key
@@ -197,6 +209,24 @@ def logout():
         "success": True,
         "message": "User logged out successfully."
         })
+
+
+@auth.route('/verify/<string:key>')
+def verify(key):
+
+    # Get the user with provided key
+    user = User.query.filter_by(secret_key=key).first()
+
+    if not user:
+        return "<h1>Invalid Token provided.</h1>"
+
+    # Confirm user email
+    user.is_email_confirmed = True
+    db.session.commit()
+
+    return "<h1>Email Confirmed successfully</h1>"
+
+
 
 # ============================
 #       Helper functions

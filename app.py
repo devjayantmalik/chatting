@@ -15,13 +15,26 @@ app = Flask(__name__)
 
 if not os.getenv('DATABASE_URL'):
 	raise Exception("Database url is not set.")
-"""
-if not os.getenv('MAIL_URL'):
-	raise Exception("Mail URL is not set.")
 
-if not os.getenv("MAIL_KEY"):
-	raise Exception("Mail secret key is not set.")
-"""
+
+# check all the mail related variables are set
+if not os.getenv('MAIL_SENDER_NAME'):
+	raise Exception("MAIL_SENDER_NAME is not set in environment variables.")
+
+if not os.getenv('MAIL_SENDER_EMAIL'):
+	raise Exception("MAIL_SENDER_EMAIL is not set in environment variables.")
+
+if not os.getenv('MAIL_SERVER_HOST'):
+	raise Exception("MAIL_SERVER_HOST is not set in environment variables.")
+
+if not os.getenv('MAIL_SERVER_PORT'):
+	raise Exception("MAIL_SERVER_PORT is not set in environment variables.")
+
+if not os.getenv('MAIL_SERVER_USERNAME'):
+	raise Exception("MAIL_SERVER_USERNAME is not set in environment variables.")
+
+if not os.getenv('MAIL_SERVER_PASSWORD'):
+	raise Exception("MAIL_SERVER_PASSWORD is not set in environment variables.")
 
 # Configure the sqlalchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
