@@ -21,7 +21,6 @@ auth = Blueprint('auth', __name__, template_folder="templates")
 def login():
     # Check if request contains secret key
     secret_key = request.headers.get('AUTH_TOKEN')
-    print(request.headers)
 
     if secret_key:
         return login_via_key(secret_key)
