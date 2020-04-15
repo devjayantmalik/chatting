@@ -3,11 +3,11 @@ dnspython==1.16.0
 Flask==1.1.2
 Flask-SocketIO==4.2.1
 Flask-SQLAlchemy==2.4.1
+gunicorn==20.0.4
 itsdangerous==1.1.0
 Jinja2==2.11.1
 MarkupSafe==1.1.1
 mysql-connector-python==8.0.19
-pkg-resources==0.0.0
 protobuf==3.6.1
 python-engineio==3.12.1
 python-socketio==4.5.1
