@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_socketio import SocketIO
 from api.auth import auth
 from api.friends import friends
 from api.channels import channels
@@ -8,10 +9,12 @@ from modals import *
 # Create a flask app
 app = Flask(__name__)
 
-
+socketio = SocketIO(app)
 # =========================
 #	Environment Variables
 # =========================
+
+
 
 if not os.getenv('DATABASE_URL'):
 	raise Exception("Database url is not set.")
@@ -53,6 +56,10 @@ app.register_blueprint(friends, url_prefix="/friends")
 app.register_blueprint(channels, url_prefix="/channels")
 app.register_blueprint(pages)
 
+
 if __name__ == "__main__":
 	with app.app_context():
 		db.create_all()
+		
+		
+		

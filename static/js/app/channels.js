@@ -12,10 +12,28 @@ function channels_page_loaded(){
 	// get subscribed channels
 	sync_subscribed_channels();
 
+	// get public channels
+	get_public_channels();
+
 	// bind create channel form
 	document.querySelector("#create-channel-form").onsubmit = create_new_channel;
 
-	
+	// create socket
+	var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+	// working with web sockets.
+	socket.on('connect', () => {
+		console.log("socket connected successfully.");
+	});
+
+	socket.on('channel new chat', data => {
+		if(data.sender_id == localStorage.getItem('user_id')){
+			sent_by_me(data.channel_id, data.message);
+		}
+		else{
+			sent_by_someone_else(data);
+		}
+	});
 }
 
 
@@ -269,14 +287,14 @@ const toggleChannelChat = (id) => {
 // ==================================
 
 function send_channel_message(id){
-	let message = document.querySelector("#channel-form-message"+id).value;
+	let message = document.querySelector("#channel-form-message"+id);
 	
 	const request = new XMLHttpRequest();
 	request.open('post', '/channels/chats/send/'+id);
 	request.setRequestHeader('AUTH_TOKEN', localStorage.getItem('secret_key'));
 
 	let form_data = new FormData();
-	form_data.append('message', message);
+	form_data.append('message', message.value);
 
 	request.onload = () => {
 		const res = JSON.parse(request.responseText);
@@ -285,7 +303,17 @@ function send_channel_message(id){
 			return;
 		}
 
-		// append the messages to the chat
+		// clear the chat message box
+		message.value = "";
+	}
+
+
+	request.send(form_data)
+}
+
+
+function sent_by_me(id, message){
+	// append the messages to the chat
 		document.querySelector('#channel-messages-'+id).innerHTML += `
 				<div class="message me">
 					<div class="text-main">
@@ -299,8 +327,69 @@ function send_channel_message(id){
 						<span>${new Date().toLocaleTimeString()}</span>
 					</div>
 				</div>`;
+}
+
+function sent_by_someone_else(data){
+	// update the html webpage
+	document.querySelector('#channel-messages-'+data.channel_id).innerHTML += 
+	`<div class="message">
+					<img
+						class="avatar-md"
+						src="${data.sender_avatar}"
+						data-toggle="tooltip"
+						data-placement="top"
+						title="${data.sender_fname} ${data.sender_lname}"
+						alt="avatar"
+					/>
+					<div class="text-main">
+						<div class="text-group">
+							<div class="text">
+								<p>
+									${data.message}
+								</p>
+							</div>
+						</div>
+						<span>
+							${new Date(data.sent_at).toLocaleTimeString()}
+						</span>
+					</div>
+				</div>`
+}
+
+function get_public_channels(){
+	const req = new XMLHttpRequest();
+	req.open('post', '/channels/public')
+	req.setRequestHeader("AUTH_TOKEN", localStorage.getItem('secret_key'))
+
+	req.onload = () => {
+		// get the response
+		let response = JSON.parse(req.responseText);
+
+		if(response.success == false){
+			show_error(response.error);
+			return;
+		}
+
+		// add new channel.
+		response.channels.forEach(add_public_channel);
+
+		// get the chats of the channel
+		response.channels.forEach(get_channel_chat);
+
 	}
 
+	req.send();
+}
 
-	request.send(form_data)
+function add_public_channel(channel){
+	// update the short date
+	channel.created_on = new Date(channel.created_on).toDateString();
+
+	let channel_raw_html = document.querySelector("#channel-template").innerHTML;
+	channel_raw_html = channel_raw_html.replace('__channel_type__', 'public')
+	let sub_ch_template = Handlebars.compile(channel_raw_html);
+	const content = sub_ch_template(channel);
+
+	// update html content.
+	document.querySelector('#channels').innerHTML += content;	
 }

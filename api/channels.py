@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 import sys
 import re
 from datetime import datetime, timedelta
-
+from flask_socketio import emit
 
 # Import the modals file in parent directory
 sys.path.insert(0, '..')
@@ -75,9 +75,63 @@ def get_categories():
 		})
 
 
-@channels.route('/public/latest', methods=['GET'])
+@channels.route('/public', methods=['POST'])
 def latest_public_channels():
-	pass
+	secret_key = request.headers.get('AUTH_TOKEN')
+
+	result = validate_token(secret_key)
+
+	if result['success'] == False:
+		return jsonify(result)
+
+	# Get the user
+	user = result['user']
+
+	# Get all channels
+	chs = Channel.query.filter_by().all()
+
+	# Filter all subscribed channels of the user.
+	subs = Subscription.query.filter_by(user_id=user['id']).all()
+
+	# Prepare list of ids
+	channel_ids = [ch.id for ch in chs]
+
+	# Subscribed ids
+	subs_ids = [sub.channel_id for sub in subs if sub.user_id == user['id']]
+
+	# Public channels which are not subscribed
+	public_ids = [ch_id for ch_id in channel_ids if ch_id not in subs_ids]
+
+	# Prepare list of channels
+	channels = []
+	max_channels = 1000
+	for channel in public_ids:
+		# Get channel by its id
+		ch = Channel.query.get(channel)
+
+		# Get the user who created channel
+		user = User.query.get(ch.created_by)
+
+		# Append to list of subscribed channels
+		channels.append({
+			"id": ch.id,
+			"name": ch.name,
+			"avatar": "/static/img/avatars/channels/" +ch.avatar,
+			"created_by": user.fname + " " + user.lname,
+			"created_on": ch.created_on,
+			"description": ch.description
+			})
+
+		# Limit to max of 1000 channels.
+		max_channels -= 1
+		if max_channels <= 0:
+			break
+
+	return jsonify({
+		"success": True,
+		"channels": channels
+		})
+
 
 
 @channels.route('/search/<string:name>', methods=['POST'])
@@ -207,7 +261,7 @@ def create_channel():
 			channel = {
 				"id": channel.id,
 				"name": channel.name,
-				"avatar": channel.avatar,
+				"avatar": "/static/img/avatars/users/" +channel.avatar,
 				"created_on": channel.created_on,
 				"description": channel.description,
 				"category": category.title
@@ -259,36 +313,32 @@ def send_message(channel_id):
 	# Get the message to send
 	message = request.form.get('message')
 
+	ch = ChannelChat(sent_by=user_id, sent_on=channel_id, message=message)
+	db.session.add(ch)
+	db.session.commit()
 
-	try:
-		ch = ChannelChat(sent_by=user_id, sent_on=channel_id, message=message)
-		db.session.add(ch)
-		db.session.commit()
+	user_info = User.query.get(user_id)
+	channel_info = Channel.query.get(channel_id)
+	message = message
+	sent_at = str(ch.sent_at)
 
-		user_info = User.query.get(user_id)
-		channel_info = Channel.query.get(channel_id)
-		message = message
-		sent_at = channel.sent_at
+	result = {
+		"sender_id": user_info.id,
+		"channel_id": channel_info.id,
+		"sender_avatar": "/static/img/avatars/users/" +user_info.avatar,
+		"sender_fname": user_info.fname,
+		"sender_lname": user_info.lname,
+		"message": message,
+		"sent_at": sent_at
+		}
 
-		result = {
-			"sender_id": user_info.id,
-			"sender_avatar": "/static/img/avatars/users/" +user_info.avatar,
-			"sender_fname": user_info.fname,
-			"sender_lname": user_info.lname,
-			"message": message,
-			"sent_at": sent_at
-			}
+	# Broadcast message
+	emit('channel new chat', result, namespace="/", broadcast=True)
 
-		return jsonify({
-			"success": True,
-			"result": result
-			})
-
-	except:
-		return jsonify({
-			"success": False,
-			"error": "Server error occured."
-			})
+	return jsonify({
+		"success": True,
+		"result": result
+		})
 
 
 # ========================
@@ -326,3 +376,4 @@ def validate_token(secret_key):
 		"success": True,
 		"user": user
 		}
+

@@ -28,7 +28,6 @@ function create_new_contact(e) {
 	request.open("POST", `/friends/search/${friend_email}`);
 	request.setRequestHeader("AUTH_TOKEN", localStorage.getItem("secret_key"));
 
-	let friend = null;
 	request.onload = () => {
 		let res = JSON.parse(request.responseText);
 		if (res.success == false) {
@@ -265,6 +264,9 @@ function send_contact_message(id){
 						<span>${new Date().toLocaleTimeString()}</span>
 					</div>
 				</div>`;
+
+		document.querySelector("#contact-form-message-"+id).value = "";
+
 	}
 
 

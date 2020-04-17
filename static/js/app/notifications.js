@@ -18,6 +18,7 @@ const get_friend_requests = () => {
 			show_error(response.error);
 			return;
 		}
+		console.log(response);
 		// display notification
 		response.requests.forEach(add_request_notification);
 

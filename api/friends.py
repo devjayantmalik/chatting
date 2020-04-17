@@ -50,7 +50,7 @@ def get_all_friends():
             })
 
     for friend in friend_ids_2:
-        user = User.query.get(friend.friend_id)
+        user = User.query.get(friend.user_id)
         status = Status.query.filter_by(user_id=user.id).first()
         friends.append({
             "id": user.id,
@@ -86,7 +86,7 @@ def friend_requests():
     user = result['user']
 
     # Get all friend requests of the user.
-    pending_ids = Friend.query.filter_by(user_id=user['id'], request_accepted=False, is_blocked=False).all()
+    pending_ids = Friend.query.filter_by(friend_id=user['id'], request_accepted=False, is_blocked=False).all()
     
     # Get all friends info
     pending_requests = []
@@ -130,7 +130,7 @@ def confirm_request(friend_id):
     user = result['user']
 
     # Confirm friend request
-    friend = Friend.query.filter_by(user_id=user['id'], friend_id=friend_id).first()
+    friend = Friend.query.filter_by(friend_id=user['id']).first()
     
     # Check if friend not found.
     if not friend:
@@ -186,7 +186,7 @@ def reject_request(friend_id):
     user = result['user']
 
     # Confirm friend request
-    friend = Friend.query.filter_by(user_id=user['id'], friend_id=friend_id).first()
+    friend = Friend.query.filter_by(friend_id=user['id']).first()
     
     # Check if friend not found.
     if not friend:

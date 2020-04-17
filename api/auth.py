@@ -165,6 +165,11 @@ def register_user():
         is_sent = mailer.send_mail(user.email, user.secret_key)
 
         if not is_sent:
+            # Confirm the user email manually
+            User.query.get(user_id);
+            User.is_email_confirmed = True
+            db.session.commit()
+            
             return jsonify({
                 "success": False,
                 "error": "Confirmation email sending failed with error. Please report us by sending us email at: prod.jayantmalik@gmail.com. It was error from our side. We will fix it soon."
@@ -218,6 +223,10 @@ def verify(key):
 
     if not user:
         return "<h1>Invalid Token provided.</h1>"
+
+    # Check if email is already confirmed
+    if user.is_email_confirmed:
+        return "<h1>Email already confirmed. </h1>"
 
     # Confirm user email
     user.is_email_confirmed = True
