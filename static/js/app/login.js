@@ -32,10 +32,11 @@ function check_login_status() {
 
 			if (result.success == false) {
 				show_error(res.error);
+
+				location.href = "/login";
+
 				return;
 			}
-
-			console.log(result);
 
 			// redirect the user to index page.
 			document.location.href = "/";

@@ -1,3 +1,16 @@
+# Project 2
+
+Web Programming with Python and JavaScript
+
+## Application Files
+
+### Folders
+| Folder Name | Description |
+| ---------- | ------------- |
+| api 	| each file is a api to which ajax request is sent from ui |
+| readme_files | The images for the readme file of application |
+| static | Static js files used by the application |
+| templates | Application HTML files and components to render ui on screen |
 
 
 
@@ -104,5 +117,6 @@ The routes of the api are:
 
 
 ## Issues
+### User status from online to offline is changed only when the user logs out of device.
 - **ISSUE**: Automatically change status to offline, after every 30 seconds. 
 - **FIX**: Client will change its status to online after every 30 seconds.
